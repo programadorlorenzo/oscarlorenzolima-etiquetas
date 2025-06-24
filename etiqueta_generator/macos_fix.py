@@ -8,7 +8,7 @@ import sys
 import platform
 import subprocess
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 
 # Verificar que estamos en macOS
 if platform.system() != "Darwin":

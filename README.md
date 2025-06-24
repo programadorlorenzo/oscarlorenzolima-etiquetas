@@ -27,6 +27,10 @@ Una aplicación para generar etiquetas de ropa a partir de un archivo Excel, cre
    ```
 3. Instale las dependencias:
    ```
+   python install_dependencies.py
+   ```
+   o manualmente:
+   ```
    pip install -r requirements.txt
    ```
 
@@ -79,23 +83,22 @@ Una aplicación para generar etiquetas de ropa a partir de un archivo Excel, cre
    
    - Si aún tiene problemas, pruebe con los scripts específicos en este orden:
      ```
-     python etiqueta_generator/run_macos.py  # Específico para macOS
-     python etiqueta_generator/macos_fix.py  # Solución directa para macOS
+     python etiqueta_generator/simple_app.py  # ¡NUEVO! Versión ultra simple para problemas específicos
+     python etiqueta_generator/run_macos.py   # Específico para macOS
+     python etiqueta_generator/macos_fix.py   # Solución directa para macOS
      python etiqueta_generator/test_tkinter.py  # Prueba básica de Tkinter
      python etiqueta_generator/emergency_app.py  # Solución de emergencia
      ```
 
-2. **Problemas específicos con macOS**:
-   - **¡NUEVO!** Utilice `launch.py` que detecta automáticamente el modo oscuro/claro.
-   - Si aún tiene problemas, ejecute desde Terminal con:
+2. **Errores de dependencias**:
+   - Si ves errores como `Missing optional dependency 'openpyxl'`, ejecuta:
      ```
-     export NSRequiresAquaSystemAppearance=YES
-     export TK_SILENCE_DEPRECATION=1
-     export PYTHONCOERCECLOCALE=0
-     export LANG=en_US.UTF-8
-     python etiqueta_generator/launch.py
+     python install_dependencies.py
      ```
-   - Como último recurso, cambie temporalmente a Light Mode en las preferencias del sistema de macOS.
+   - También puedes instalar las dependencias manualmente:
+     ```
+     pip install pandas openpyxl reportlab pillow python-barcode
+     ```
 
 ## Formato del Archivo Excel
 
@@ -136,3 +139,15 @@ etiqueta_generator/
 ## Personalización
 
 Si desea personalizar el diseño de las etiquetas, puede modificar el archivo `pdf_utils.py` en la función `create_label_pdf()`.
+
+## Problemas específicos con macOS
+   - **¡NUEVO!** Utilice `launch.py` que detecta automáticamente el modo oscuro/claro.
+   - Si aún tiene problemas, ejecute desde Terminal con:
+     ```
+     export NSRequiresAquaSystemAppearance=YES
+     export TK_SILENCE_DEPRECATION=1
+     export PYTHONCOERCECLOCALE=0
+     export LANG=en_US.UTF-8
+     python etiqueta_generator/launch.py
+     ```
+   - Como último recurso, cambie temporalmente a Light Mode en las preferencias del sistema de macOS.
