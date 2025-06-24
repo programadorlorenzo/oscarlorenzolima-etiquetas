@@ -148,11 +148,11 @@ class GeneradorEtiquetas:
         
         # Espacio entre etiquetas (muy reducido para acercar las etiquetas)
         self.padding_x = 0.2 * cm   # Mínimo espacio horizontal
-        self.padding_y = 0.3 * cm   # Reducido para acercar las etiquetas verticalmente
+        self.padding_y = 0 * cm   # Reducido para acercar las etiquetas verticalmente
         
         # Margen de página (reducido al mínimo)
         self.margin_x = 0.15 * cm
-        self.margin_y = 0.5 * cm    # Reducido para empezar más arriba
+        self.margin_y = 0 * cm    # Reducido para empezar más arriba
         
         # Calcular el alto de la página basado en el número de etiquetas que queremos incluir
         # Ancho fijo de 10cm como se solicitó
