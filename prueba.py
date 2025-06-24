@@ -8,15 +8,17 @@ from PIL import Image
 # Datos
 pdf_file = "etiqueta_jean.pdf"
 barcode_value = "123456789012"
-product_name = "Jean Ballion Grenish Blue Pet. Cad."
+product_name = "Jean Renata Ver. Menta"
 talla = "Talla 26"
+tamanio = "Petite"
+posicion = "Cadera"
 precio = "S/ 115.00"
 sku = "52505-R-VM268840"  # Añadimos el SKU
 image_path = "logo.png"  # Cambia esto a tu imagen
 
-# Dimensiones del PDF (3 cm x 3 cm)
+# Dimensiones del PDF (3 cm x 4 cm)
 width = 3 * cm
-height = 3 * cm
+height = 4 * cm
 
 # Crear canvas
 c = canvas.Canvas(pdf_file, pagesize=(width, height))
@@ -37,8 +39,17 @@ text_y = img_y - 0.3 * cm
 c.setFont("Helvetica", 5)
 c.drawCentredString(width / 2, text_y, product_name)
 
-# Talla (debajo del nombre) - mismo formato que el nombre del producto
-talla_y = text_y - 0.25 * cm  # Reducido el espacio
+# Tamaño y Posición (lado a lado)
+tam_pos_y = text_y - 0.2 * cm
+c.setFont("Helvetica", 4.5)  # Un poco más pequeño
+# Calculamos posiciones para que estén uno al lado del otro
+left_x = width * 0.3
+right_x = width * 0.7
+c.drawString(left_x - c.stringWidth(tamanio, "Helvetica", 4.5) / 2, tam_pos_y, tamanio)
+c.drawString(right_x - c.stringWidth(posicion, "Helvetica", 4.5) / 2, tam_pos_y, posicion)
+
+# Talla (debajo del nombre y tamaño/posición)
+talla_y = tam_pos_y - 0.2 * cm  # Reducido el espacio
 c.setFont("Helvetica", 5)  # Mismo formato que el nombre
 c.drawCentredString(width / 2, talla_y, talla)
 
@@ -64,12 +75,11 @@ c.rect(price_x, rect_y, price_box_width, rect_height)
 rect_center_y = rect_y + (rect_height / 2)
 
 # En ReportLab, el texto se dibuja desde la línea base, así que necesitamos ajustar:
-# Para una fuente de tamaño 7, un offset de aproximadamente 2.5 puntos funciona bien
 font_offset = 2.5
 c.drawCentredString(width / 2, rect_center_y - font_offset, precio)
 
 # Código de barras (centro)
-barcode = code128.Code128(barcode_value, barHeight=0.6 * cm, barWidth=0.025 * cm)  # Altura reducida
+barcode = code128.Code128(barcode_value, barHeight=0.6 * cm, barWidth=0.015 * cm)  # Altura reducida
 barcode_x = (width - barcode.width) / 2
 barcode_y = precio_y - 0.85 * cm  # Ajustado para dar espacio al cuadro del precio
 barcode.drawOn(c, barcode_x, barcode_y)
@@ -78,8 +88,8 @@ barcode.drawOn(c, barcode_x, barcode_y)
 c.setFont("Helvetica", 4)
 c.drawCentredString(width / 2, barcode_y - 0.18 * cm, barcode_value)
 
-# SKU (al final con letra pequeña)
-c.setFont("Helvetica", 3.5)  # Letra muy pequeña
+# SKU (al final con letra más pequeña)
+c.setFont("Helvetica", 3)  # Letra aún más pequeña (era 3.5)
 sku_y = 0.15 * cm  # En la parte inferior
 c.drawCentredString(width / 2, sku_y, sku)
 
