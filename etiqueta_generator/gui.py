@@ -10,6 +10,30 @@ import platform
 import pandas as pd
 from etiquetas import EtiquetaGenerator
 
+# Configuración para compatibilidad con sistemas operativos
+def check_system_compatibility():
+    """Comprueba la compatibilidad con el sistema operativo y hace ajustes si es necesario."""
+    # Silenciar advertencia de deprecación de Tk en macOS
+    if platform.system() == "Darwin":
+        os.environ['TK_SILENCE_DEPRECATION'] = '1'
+        
+        # Solución para problemas de visualización en macOS con pantallas Retina
+        os.environ['PYTHONCOERCECLOCALE'] = '0'
+        os.environ['LANG'] = 'en_US.UTF-8'
+        
+        # Configuración específica para dark mode en macOS
+        if os.system('defaults read -g AppleInterfaceStyle 2>/dev/null') == 0:
+            # El sistema está en dark mode, configurar variables para compatibilidad
+            os.environ['DARK_MODE'] = '1'
+    
+    # Ajustes para Windows
+    elif platform.system() == "Windows":
+        # Configuraciones específicas para Windows si son necesarias
+        pass
+
+# Llamar a la función al importar el módulo
+check_system_compatibility()
+
 class EtiquetaGeneratorGUI:
     """
     Clase para la interfaz gráfica del generador de etiquetas.
@@ -27,6 +51,22 @@ class EtiquetaGeneratorGUI:
         self.root.geometry("600x450")
         self.root.resizable(False, False)
         
+        # Configurar colores para asegurar visibilidad
+        self.bg_color = '#f0f0f0'  # Color de fondo estándar
+        self.fg_color = '#000000'  # Color de texto negro
+        self.accent_color = '#4a7abc'  # Color de acento para elementos destacados
+        
+        # Configurar estilo para widgets ttk
+        self.style = ttk.Style()
+        self.style.configure('TFrame', background=self.bg_color)
+        self.style.configure('TLabel', background=self.bg_color, foreground=self.fg_color)
+        self.style.configure('TButton', background=self.bg_color)
+        self.style.configure('TLabelframe', background=self.bg_color)
+        self.style.configure('TLabelframe.Label', background=self.bg_color, foreground=self.fg_color)
+        
+        # Aplicar el color de fondo a la ventana principal
+        self.root.configure(background=self.bg_color)
+        
         # Generador de etiquetas
         self.etiqueta_generator = EtiquetaGenerator()
         
@@ -42,7 +82,7 @@ class EtiquetaGeneratorGUI:
     def _setup_ui(self):
         """Configura los elementos de la interfaz gráfica."""
         # Frame principal con padding
-        main_frame = ttk.Frame(self.root, padding="10")
+        main_frame = ttk.Frame(self.root, padding="10", style='TFrame')
         main_frame.pack(fill=tk.BOTH, expand=True)
         
         # Título
@@ -169,6 +209,9 @@ class EtiquetaGeneratorGUI:
                 "Error", 
                 "No se pudo cargar el archivo Excel o no contiene las columnas requeridas."
             )
+        
+        # Asegurar que la interfaz se muestra correctamente
+        self._ensure_proper_display()
     
     def _update_options_frame(self):
         """Actualiza el frame de opciones con los productos del Excel."""
@@ -415,12 +458,92 @@ class EtiquetaGeneratorGUI:
                 "Error", 
                 f"No se pudo abrir el archivo:\n{str(e)}"
             )
+    
+    def _ensure_proper_display(self):
+        """
+        Asegura que los elementos de la interfaz se muestren correctamente.
+        Se llama después de completar operaciones importantes.
+        """
+        # Forzar actualización de la interfaz
+        self.root.update_idletasks()
+        
+        # Asegurar que todos los widgets tienen los colores correctos
+        self.root.configure(background=self.bg_color)
+        
+        # Recorrer todos los frames y asegurar que mantienen el color correcto
+        for widget in self.root.winfo_children():
+            if isinstance(widget, ttk.Frame):
+                self.style.configure("TFrame", background=self.bg_color)
+            elif isinstance(widget, ttk.LabelFrame):
+                self.style.configure("TLabelframe", background=self.bg_color)
+                self.style.configure("TLabelframe.Label", background=self.bg_color)
 
 
 def main():
     """Función principal para iniciar la aplicación."""
+    # Verificar compatibilidad antes de iniciar
+    check_system_compatibility()
+    
+    # Crear la ventana principal
     root = tk.Tk()
+    
+    # Configuración básica de la ventana
+    root.title("Generador de Etiquetas")
+    root.geometry("600x450")
+    
+    try:
+        # Intentar establecer un icono si existe
+        icon_path = os.path.join(os.path.dirname(__file__), "assets", "icon.png")
+        if os.path.exists(icon_path):
+            img = tk.PhotoImage(file=icon_path)
+            root.iconphoto(True, img)
+    except Exception:
+        # Ignorar errores si no se puede cargar el icono
+        pass
+    
+    # Configurar tema para evitar problemas de visualización
+    style = ttk.Style()
+    
+    # Seleccionar un tema confiable que funcione en todos los sistemas
+    available_themes = style.theme_names()
+    
+    # Preferir temas nativos si están disponibles
+    if platform.system() == "Darwin" and 'aqua' in available_themes:
+        style.theme_use('aqua')
+    elif platform.system() == "Windows" and 'vista' in available_themes:
+        style.theme_use('vista')
+    elif 'clam' in available_themes:
+        style.theme_use('clam')  # Un tema que funciona bien en todos los sistemas
+    
+    # Colores base
+    bg_color = '#f5f5f5'  # Un gris muy claro para el fondo
+    
+    # Configurar colores de fondo y primer plano para toda la aplicación
+    root.configure(background=bg_color)
+    
+    # Configuración específica para ttk widgets
+    style.configure('.', background=bg_color)
+    style.configure("TFrame", background=bg_color)
+    style.configure("TLabel", background=bg_color)
+    style.configure("TLabelframe", background=bg_color)
+    style.configure("TLabelframe.Label", background=bg_color)
+    
+    # Evitar que los widgets ttk hereden el color de fondo del tema
+    style.map('TButton', background=[('active', bg_color)])
+    style.map('TCheckbutton', background=[('active', bg_color)])
+    
+    # Inicializar la aplicación
     app = EtiquetaGeneratorGUI(root)
+    
+    # Centrar la ventana en la pantalla
+    root.update_idletasks()
+    width = root.winfo_width()
+    height = root.winfo_height()
+    x = (root.winfo_screenwidth() // 2) - (width // 2)
+    y = (root.winfo_screenheight() // 2) - (height // 2)
+    root.geometry(f'{width}x{height}+{x}+{y}')
+    
+    # Iniciar el bucle principal
     root.mainloop()
 
 

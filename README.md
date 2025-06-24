@@ -32,10 +32,28 @@ Una aplicación para generar etiquetas de ropa a partir de un archivo Excel, cre
 
 ## Uso
 
-1. Ejecute la aplicación:
+1. Ejecute la aplicación (elija uno de estos métodos):
+
+   **¡SOLUCIÓN RECOMENDADA!** Este script detecta automáticamente su sistema operativo y aplica la configuración adecuada:
    ```
-   python main.py
+   python etiqueta_generator/launch.py
    ```
+   
+   **Para macOS (especialmente si tiene problemas con modo oscuro):**
+   ```
+   python etiqueta_generator/run_macos.py
+   ```
+   
+   **Para cualquier sistema operativo:**
+   ```
+   python etiqueta_generator/main.py
+   ```
+   
+   **Si necesita diagnosticar problemas con Tkinter en macOS:**
+   ```
+   python etiqueta_generator/test_tkinter.py
+   ```
+
 2. En la interfaz:
    - Haga clic en "Buscar" para seleccionar un archivo Excel
    - Elija si desea usar el stock del Excel para generar las etiquetas (una etiqueta por cada unidad en stock)
@@ -48,6 +66,36 @@ Una aplicación para generar etiquetas de ropa a partir de un archivo Excel, cre
 3. Nota sobre los códigos de barras:
    - Si usa el stock para generar etiquetas, todas las unidades del mismo producto tendrán el mismo código de barras
    - Cada etiqueta se generará en una página separada del PDF para facilitar la impresión individual
+
+## Solución de Problemas
+
+1. **Ventana en negro o problemas de visualización**:
+   - Si la ventana aparece en negro o tiene problemas de visualización, **utilice el nuevo script de lanzamiento universal**:
+     ```
+     python etiqueta_generator/launch.py
+     ```
+   - Este script detecta automáticamente su sistema operativo y el modo de visualización (claro/oscuro), 
+     aplicando la solución más adecuada.
+   
+   - Si aún tiene problemas, pruebe con los scripts específicos en este orden:
+     ```
+     python etiqueta_generator/run_macos.py  # Específico para macOS
+     python etiqueta_generator/macos_fix.py  # Solución directa para macOS
+     python etiqueta_generator/test_tkinter.py  # Prueba básica de Tkinter
+     python etiqueta_generator/emergency_app.py  # Solución de emergencia
+     ```
+
+2. **Problemas específicos con macOS**:
+   - **¡NUEVO!** Utilice `launch.py` que detecta automáticamente el modo oscuro/claro.
+   - Si aún tiene problemas, ejecute desde Terminal con:
+     ```
+     export NSRequiresAquaSystemAppearance=YES
+     export TK_SILENCE_DEPRECATION=1
+     export PYTHONCOERCECLOCALE=0
+     export LANG=en_US.UTF-8
+     python etiqueta_generator/launch.py
+     ```
+   - Como último recurso, cambie temporalmente a Light Mode en las preferencias del sistema de macOS.
 
 ## Formato del Archivo Excel
 
