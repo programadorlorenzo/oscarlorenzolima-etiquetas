@@ -9,9 +9,7 @@ import pandas as pd
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget, QWidget, QVBoxLayout,
                             QHBoxLayout, QLabel, QLineEdit, QSpinBox, QDoubleSpinBox, 
                             QPushButton, QTableWidget, QTableWidgetItem, QHeaderView, 
-                            QFileDialog, QMessageBox, QGroupBox, QFormLayout, QGridLayout)
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
+                            QFileDialog, QMessageBox, QGroupBox, QGridLayout)
 
 from excel_manager import ExcelManager
 from generador_etiqueta import GeneradorEtiquetas
