@@ -128,7 +128,7 @@ class ExcelManager:
                     'talla': row.get('Variante', ''),
                     'tamanio': row.get('Tamanio', ''),
                     'posicion': row.get('Posicion', ''),
-                    'precio': f"S/ {row.get('Precio Unitario', 0):.2f}",
+                    'precio': f"S/ {row.get('Precio handtag', 0):.2f}",
                     'sku': sku,
                     'barcode_value': barcode,
                     'image_path': 'assets/logo.png'
