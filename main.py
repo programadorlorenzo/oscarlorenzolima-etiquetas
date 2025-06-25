@@ -30,6 +30,11 @@ def main():
         print("⚠️ No hay productos con stock para generar etiquetas")
         return
     
+    print(f"✅ Se generarán {len(datos_etiquetas)} etiquetas basadas en el stock de los productos.")
+    print("Cada producto se replicará según su stock disponible.")
+    print("El primer producto es :", datos_etiquetas[0])
+    return;
+    
     # Crear generador de etiquetas con página de 10.02cm de ancho
     generador = GeneradorEtiquetas("output/etiquetas_productos.pdf", custom_width=10.02*cm)
     
