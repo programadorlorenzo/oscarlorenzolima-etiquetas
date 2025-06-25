@@ -23,7 +23,7 @@ class Etiqueta:
         self.posicion = datos.get('posicion', '')
         self.precio = datos.get('precio', '')
         self.sku = datos.get('sku', '')
-        self.image_path = datos.get('image_path', 'logo.png')
+        self.image_path = datos.get('image_path', 'assets/logo.png')
         
         # Dimensiones estándar de la etiqueta (3.05x4 cm)
         self.width = 3.05 * cm

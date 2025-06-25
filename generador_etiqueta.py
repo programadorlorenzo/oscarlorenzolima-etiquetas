@@ -118,7 +118,7 @@ class GeneradorEtiquetas:
                 'precio': random.choice(precios),
                 'sku': sku,
                 'barcode_value': barcode,
-                'image_path': 'logo.png'
+                'image_path': 'assets/logo.png'
             })
         
         return datos
