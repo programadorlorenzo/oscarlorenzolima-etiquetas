@@ -67,7 +67,7 @@ class Etiqueta:
             
         # Nombre del producto (debajo de imagen)
         text_y = img_y - 0.3 * cm
-        c.setFont("Helvetica-Bold", 5.6)
+        c.setFont("Helvetica", 6.1)
         c.drawCentredString(self.width / 2, text_y, self.product_name)
         
         # Tamaño y Posición (centrados y separados por guión)
