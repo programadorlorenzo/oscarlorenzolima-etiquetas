@@ -486,15 +486,24 @@ class EtiquetasAppQt(QMainWindow):
             QMessageBox.critical(self, "Error", f"Error al cargar el archivo: {str(e)}")
     
     def generar_pdf(self):
-        """Genera un PDF con las etiquetas de todos los productos."""
+        """Genera un PDF con las etiquetas de todos los productos y permite al usuario exportarlo."""
         if self.productos_df.empty:
             QMessageBox.critical(self, "Error", "No hay productos para generar etiquetas")
             return
         
         try:
-            # Crear directorio de salida si no existe
-            if not os.path.exists("output"):
-                os.makedirs("output")
+            # Seleccionar ubicación para guardar el PDF
+            filepath, _ = QFileDialog.getSaveFileName(
+                self, "Guardar PDF de Etiquetas", "", "Archivos PDF (*.pdf)"
+            )
+            
+            if not filepath:
+                return  # El usuario canceló
+            
+            # Crear directorio si no existe
+            output_dir = os.path.dirname(filepath)
+            if output_dir and not os.path.exists(output_dir):
+                os.makedirs(output_dir)
             
             # Crear un ExcelManager temporal con nuestros datos
             excel_manager = ExcelManager()
@@ -507,15 +516,15 @@ class EtiquetasAppQt(QMainWindow):
                 QMessageBox.critical(self, "Error", "No hay productos con stock para generar etiquetas")
                 return
             
-            # Crear generador de etiquetas
-            generador = GeneradorEtiquetas("output/etiquetas_productos.pdf", custom_width=10.02*cm)
+            # Crear generador de etiquetas con la ruta seleccionada por el usuario
+            generador = GeneradorEtiquetas(filepath, custom_width=10.02*cm)
             
             # Generar PDF
             generador.generar_pdf(datos_etiquetas)
             
             QMessageBox.information(self, "Éxito", 
-                                  f"PDF generado en: output/etiquetas_productos.pdf\n"
-                                  f"Se generaron {len(datos_etiquetas)} etiquetas")
+                                f"PDF generado exitosamente en: {filepath}\n"
+                                f"Se generaron {len(datos_etiquetas)} etiquetas")
             
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Error al generar PDF: {str(e)}")
