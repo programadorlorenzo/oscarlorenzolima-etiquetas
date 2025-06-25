@@ -120,11 +120,11 @@ class Etiqueta:
         barcode.drawOn(c, barcode_x, barcode_y)
         
         # Número del código de barras debajo del código
-        c.setFont("Helvetica", 4)
+        c.setFont("Helvetica", 4.5)
         c.drawCentredString(self.width / 2, barcode_y - 0.18 * cm, self.barcode_value)
         
         # SKU (al final con letra más pequeña)
-        c.setFont("Helvetica", 3)
+        c.setFont("Helvetica", 4)
         sku_y = 0.15 * cm
         c.drawCentredString(self.width / 2, sku_y, self.sku)
         
