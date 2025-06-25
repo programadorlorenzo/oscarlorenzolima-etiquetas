@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import random
+import hashlib
 
 class ExcelManager:
     """Clase para manejar la importación y procesamiento de datos desde Excel."""
@@ -40,6 +42,39 @@ class ExcelManager:
             print(f"❌ Error al cargar el archivo Excel: {e}")
             raise
     
+    def generar_barcode(self, sku):
+        """Genera un código de barras basado en el SKU.
+        
+        Args:
+            sku: El SKU del producto
+            
+        Returns:
+            String con el código de barras numérico
+        """
+        # Asegurarse de que el SKU sea un string
+        sku_str = str(sku).strip()
+        
+        # Generar un hash MD5 basado en el SKU
+        hash_object = hashlib.md5(sku_str.encode())
+        hash_hex = hash_object.hexdigest()
+        
+        # Convertir parte del hash hexadecimal a un número
+        hash_num = int(hash_hex[:8], 16)
+        
+        # Añadir un factor aleatorio pero consistente para el mismo SKU
+        # Usamos el mismo SKU como semilla para el generador aleatorio
+        random.seed(sku_str)
+        random_factor = random.randint(1000, 9999)
+        
+        # Restaurar la semilla global después de usarla localmente
+        random.seed()
+        
+        # Combinar el hash del SKU con el factor aleatorio para generar un código de barras
+        # Limitamos el resultado a 12 dígitos que es común en códigos de barras
+        barcode = str((hash_num + random_factor) % 1000000000000).zfill(12)
+        
+        return barcode
+    
     def generar_datos_etiquetas(self):
         """Genera los datos para las etiquetas, replicando cada producto según su stock.
         
@@ -62,16 +97,25 @@ class ExcelManager:
                 print(f"⚠️ Advertencia: Stock no válido para {row.get('Nombre Producto/Servicio', '')}, utilizando 0")
                 stock = 0
             
-            # Para cada unidad en stock, crear una etiqueta
+            # Obtener el SKU
+            sku = str(row.get('SKU', ''))
+            
+            # Generar un único código de barras para este producto
+            # Si ya tiene un código de barras, usarlo; si no, generarlo basado en el SKU
+            barcode = str(row.get('Código Barras', '')).strip()
+            if not barcode or barcode.lower() == 'nan':
+                barcode = self.generar_barcode(sku)
+            
+            # Para cada unidad en stock, crear una etiqueta con el mismo código de barras
             for _ in range(max(0, stock)):
                 etiqueta_data = {
                     'product_name': row.get('Nombre Producto/Servicio', ''),
                     'talla': row.get('Variante', ''),
                     'tamanio': row.get('Tamanio', ''),
                     'posicion': row.get('Posicion', ''),
-                    'precio': f"S/ {row.get('Precio handtag', 0):.2f}",
-                    'sku': str(row.get('SKU', '')),
-                    'barcode_value': str(row.get('Código Barras', '')),
+                    'precio': f"S/ {row.get('Precio Unitario', 0):.2f}",
+                    'sku': sku,
+                    'barcode_value': barcode,
                     'image_path': 'assets/logo.png'
                 }
                 datos_etiquetas.append(etiqueta_data)

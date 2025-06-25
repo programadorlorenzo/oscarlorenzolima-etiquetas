@@ -32,7 +32,7 @@ def main():
     
     print(f"✅ Se generarán {len(datos_etiquetas)} etiquetas basadas en el stock de los productos.")
     print("Cada producto se replicará según su stock disponible.")
-    print("El primer producto es :", datos_etiquetas[0])
+    print("El primer producto es :", datos_etiquetas[20])
     return;
     
     # Crear generador de etiquetas con página de 10.02cm de ancho
