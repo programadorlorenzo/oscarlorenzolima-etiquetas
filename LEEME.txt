@@ -1,0 +1,47 @@
+# Generador de Etiquetas
+
+## Descripción
+
+Esta aplicación permite generar etiquetas de productos con códigos de barras en formato PDF y gestionar los datos en Excel.
+
+## Características principales
+
+- Formulario para agregar/editar productos individualmente
+- Importación de productos desde archivos Excel
+- Generación de códigos de barras únicos basados en SKU
+- Exportación de etiquetas en formato PDF (3x4 cm, 3 columnas por página)
+- Exportación de datos de productos a Excel
+- Réplica automática de etiquetas según stock
+
+## Instrucciones de uso
+
+1. Para agregar productos:
+   - Rellene el formulario con los datos del producto
+   - Haga clic en "Agregar Producto"
+
+2. Para importar desde Excel:
+   - Haga clic en "Importar Excel"
+   - Seleccione un archivo Excel compatible
+   - El formato debe tener las columnas: Nombre, Talla, Color, Precio, Stock y SKU
+
+3. Para generar etiquetas:
+   - Agregue todos los productos necesarios
+   - Haga clic en "Generar Etiquetas PDF"
+   - Seleccione la ubicación para guardar el archivo
+
+4. Para exportar a Excel:
+   - Haga clic en "Exportar a Excel"
+   - Seleccione la ubicación para guardar el archivo
+
+## Requisitos mínimos
+
+- Windows 10 o macOS 10.14+
+- Resolución de pantalla mínima: 1280x720
+- 2 GB de RAM
+- 100 MB de espacio en disco
+
+## Soporte
+
+Para soporte técnico o consultas, por favor contacte a su proveedor.
+
+© 2023 JOLG. Todos los derechos reservados.

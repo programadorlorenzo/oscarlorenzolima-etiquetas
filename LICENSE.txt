@@ -1,0 +1,30 @@
+CONTRATO DE LICENCIA DE USUARIO FINAL
+
+IMPORTANTE: ESTE ES UN CONTRATO LEGAL ENTRE USTED Y JOLG. 
+AL INSTALAR, COPIAR O UTILIZAR DE OTRA MANERA ESTE SOFTWARE, USTED ACEPTA ESTAR OBLIGADO POR LOS TÉRMINOS DE ESTE CONTRATO.
+
+1. CONCESIÓN DE LICENCIA
+JOLG le otorga una licencia no exclusiva para utilizar este software según los términos de este acuerdo.
+
+2. PROPIEDAD
+El software es propiedad de JOLG y está protegido por las leyes de derechos de autor. 
+Usted no adquiere ningún derecho, título o interés en el software excepto el derecho a utilizarlo de acuerdo con este contrato.
+
+3. RESTRICCIONES
+Usted no puede:
+- Modificar, adaptar o traducir el software.
+- Descompilar, desensamblar o realizar ingeniería inversa del software.
+- Eliminar o alterar cualquier aviso de derechos de autor o marca registrada.
+- Distribuir, alquilar, arrendar o transferir el software a terceros.
+
+4. TERMINACIÓN
+Esta licencia es efectiva hasta que termine. JOLG puede terminar su licencia si usted no cumple con los términos de este acuerdo.
+Al terminar, usted debe destruir todas las copias del software.
+
+5. GARANTÍA LIMITADA
+El software se proporciona "tal cual" sin garantía de ningún tipo, ya sea expresa o implícita.
+
+6. LIMITACIÓN DE RESPONSABILIDAD
+En ningún caso JOLG será responsable por daños especiales, incidentales, indirectos o consecuentes.
+
+© 2023 JOLG. Todos los derechos reservados.

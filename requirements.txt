@@ -2,3 +2,6 @@ reportlab==4.0.4
 python-barcode==0.15.1
 Pillow==10.0.0
 PyQt5==5.15.9
+PyInstaller==5.13.0
+pandas==2.0.3
+py2app==0.28.6
