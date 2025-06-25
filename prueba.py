@@ -135,12 +135,12 @@ class Etiqueta:
 class GeneradorEtiquetas:
     """Clase para generar un PDF con múltiples etiquetas."""
     
-    def __init__(self, output_file="etiquetas.pdf", custom_width=10*cm):
+    def __init__(self, output_file="etiquetas.pdf", custom_width=10.02*cm):
         """Inicializa el generador de etiquetas.
         
         Args:
             output_file: Ruta del archivo PDF a generar
-            custom_width: Ancho personalizado de la página (default: 10cm)
+            custom_width: Ancho personalizado de la página (default: 10.02cm)
         """
         # Dimensiones de etiquetas (ajustado para optimizar el espacio)
         self.etiqueta_width = 3.05 * cm  # Ligeramente reducido para evitar advertencias
@@ -151,25 +151,36 @@ class GeneradorEtiquetas:
         self.padding_y = 0 * cm   # Reducido para acercar las etiquetas verticalmente
         
         # Margen de página (reducido al mínimo)
-        self.margin_x = 0.15 * cm
-        self.margin_y = 0 * cm    # Reducido para empezar más arriba
+        self.margin_x = 0.18 * cm
+        self.margin_y = 0.01 * cm    # Reducido casi a cero pero manteniendo un mínimo
         
-        # Calcular el alto de la página basado en el número de etiquetas que queremos incluir
-        # Ancho fijo de 10cm como se solicitó
+        # Ancho fijo de 10.02cm como se solicitó
         self.page_width = custom_width
         
         # Para 3 etiquetas en horizontal, calculamos el espacio necesario
-        # Verificar que entren 3 etiquetas en el ancho especificado
         etiquetas_width_total = (3 * self.etiqueta_width) + (2 * self.padding_x)
         if etiquetas_width_total + (2 * self.margin_x) > self.page_width:
             print(f"⚠️ Advertencia: El ancho de página ({self.page_width/cm:.2f} cm) podría ser insuficiente para 3 etiquetas de {self.etiqueta_width/cm:.2f} cm con margen de {self.margin_x/cm:.2f} cm y padding de {self.padding_x/cm:.2f} cm")
             # Ajustar automáticamente el margen para que encajen
-            self.margin_x = max(0.1 * cm, (self.page_width - etiquetas_width_total) / 2)
+            self.margin_x = max(0.01 * cm, (self.page_width - etiquetas_width_total) / 2)
             print(f"   Ajustando margen horizontal a {self.margin_x/cm:.2f} cm")
         
-        # Fijar 6 filas por página (18 etiquetas por página)
-        self.rows = 6  # Aumentado de 5 a 6 filas
-        self.page_height = (self.rows * self.etiqueta_height) + ((self.rows - 1) * self.padding_y) + (2 * self.margin_y)
+        # Fijar 1 fila por página (solo 3 etiquetas por página)
+        self.rows = 1
+        
+        # Altura exacta de la página: altura de etiqueta + margen superior + margen inferior
+        self.page_height = self.etiqueta_height + (2 * self.margin_y)
+        print(f"📏 Dimensiones de página: {self.page_width/cm:.2f} cm × {self.page_height/cm:.2f} cm")
+        
+        # Crear un tamaño de página personalizado
+        custom_page_size = (self.page_width, self.page_height)
+        
+        self.output_file = output_file
+        self.page_size = custom_page_size
+        self.canvas = canvas.Canvas(output_file, pagesize=custom_page_size)
+        
+        # Configuración fija para 3 columnas como se solicita
+        self.cols = 3
         
         # Crear un tamaño de página personalizado
         custom_page_size = (self.page_width, self.page_height)
@@ -277,11 +288,11 @@ class GeneradorEtiquetas:
 # Función principal
 def main():
     """Función principal para generar las etiquetas."""
-    # Crear generador de etiquetas con página de 10cm de ancho
-    generador = GeneradorEtiquetas("etiquetas_multiple.pdf", custom_width=9.8*cm)
+    # Crear generador de etiquetas con página de 10.02cm de ancho
+    generador = GeneradorEtiquetas("etiquetas_multiple.pdf", custom_width=10.02*cm)
     
-    # Generar datos de ejemplo
-    datos_etiquetas = generador.generar_mockup_datos(50)
+    # Generar datos de ejemplo (múltiplos de 3 para páginas completas)
+    datos_etiquetas = generador.generar_mockup_datos(51)  # 17 páginas con 3 etiquetas cada una
     
     # Generar PDF con etiquetas
     generador.generar_pdf(datos_etiquetas)
