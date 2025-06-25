@@ -137,6 +137,17 @@ class EtiquetasAppQt(QMainWindow):
         self.btn_agregar.clicked.connect(self.agregar_producto)
         btn_layout.addWidget(self.btn_agregar)
         
+        # Nuevo botón para editar producto seleccionado
+        self.btn_editar = QPushButton("Editar Producto")
+        self.btn_editar.clicked.connect(self.editar_producto)
+        btn_layout.addWidget(self.btn_editar)
+        
+        self.btn_cancelar = QPushButton("Cancelar Edición")
+        self.btn_cancelar.clicked.connect(self.cancelar_edicion)
+        self.btn_cancelar.setVisible(False)  # Inicialmente oculto
+        btn_layout.addWidget(self.btn_cancelar)
+        
+        # Botones para generar PDF y exportar Excel
         self.btn_generar_pdf = QPushButton("Generar Etiquetas PDF")
         self.btn_generar_pdf.clicked.connect(self.generar_pdf)
         btn_layout.addWidget(self.btn_generar_pdf)
@@ -176,6 +187,20 @@ class EtiquetasAppQt(QMainWindow):
         table_layout.addWidget(self.table)
         table_group.setLayout(table_layout)
         layout.addWidget(table_group)
+        
+    # Y añadir la función cancelar_edicion
+    def cancelar_edicion(self):
+        """Cancela la edición en curso y restablece el formulario."""
+        # Restaurar estado inicial de botones y formulario
+        self.btn_agregar.setText("Agregar Producto")
+        self.btn_agregar.clicked.disconnect()
+        self.btn_agregar.clicked.connect(self.agregar_producto)
+        self.btn_editar.setEnabled(True)
+        self.btn_cancelar.setVisible(False)
+        self.txt_sku.setEnabled(True)
+        
+        # Limpiar formulario
+        self.limpiar_formulario()
         
     def setup_tab_importar(self):
         """Configurar la pestaña para importar Excel."""
@@ -277,6 +302,107 @@ class EtiquetasAppQt(QMainWindow):
                 
                 # Eliminar de la tabla visual
                 self.table.removeRow(row)
+    
+    def editar_producto(self):
+        """Edita el producto seleccionado en la tabla."""
+        row = self.table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Advertencia", "Seleccione un producto para editar")
+            return
+        
+        try:
+            # Obtener el SKU del producto seleccionado (para identificarlo)
+            sku = self.table.item(row, 6).text()
+            
+            # Encontrar el producto en el DataFrame
+            producto = self.productos_df[self.productos_df['SKU'] == sku].iloc[0]
+            
+            # Cargar los datos del producto en el formulario
+            self.txt_nombre.setText(producto.get('Nombre Producto/Servicio', ''))
+            self.txt_nombre_etiqueta.setText(producto.get('Nombre Etiqueta', ''))
+            self.txt_variante.setText(str(producto.get('Variante', '')))
+            self.txt_tamanio.setText(str(producto.get('Tamanio', '')))
+            self.txt_posicion.setText(str(producto.get('Posicion', '')))
+            self.txt_sku.setText(str(producto.get('SKU', '')))
+            self.txt_sku.setEnabled(False)  # No permitir cambiar el SKU porque es la clave
+            
+            self.txt_precio.setValue(producto.get('Precio Unitario', 0))
+            self.txt_precio_handtag.setValue(producto.get('Precio handtag', 0))
+            self.txt_stock.setValue(producto.get('Stock', 1))
+            self.txt_costo.setValue(producto.get('Costo Neto', 0))
+            self.txt_precio_mayor.setValue(producto.get('Precio x mayor', 0))
+            self.txt_precio_almacen.setValue(producto.get('Precio almacen', 0))
+            
+            # Cambiar el botón Agregar para que ahora actualice
+            self.btn_agregar.setText("Actualizar Producto")
+            self.btn_agregar.clicked.disconnect()  # Desconectar evento anterior
+            self.btn_agregar.clicked.connect(lambda: self.actualizar_producto(sku))
+            
+            # Deshabilitar otros botones mientras se edita
+            self.btn_cancelar.setVisible(True)
+            self.btn_editar.setEnabled(False)
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al cargar datos del producto: {str(e)}")
+
+    def actualizar_producto(self, sku_original):
+        """Actualiza un producto existente con los datos del formulario."""
+        try:
+            # Validar datos básicos
+            if not self.txt_nombre.text().strip():
+                QMessageBox.critical(self, "Error", "El nombre del producto es obligatorio")
+                return
+            
+            # Si no se proporciona nombre para etiqueta, usar el nombre del producto
+            nombre_etiqueta = self.txt_nombre_etiqueta.text().strip() or self.txt_nombre.text().strip()
+            
+            # Obtener el código de barras existente
+            barcode = self.productos_df.loc[self.productos_df['SKU'] == sku_original, 'Código Barras'].iloc[0]
+            
+            # Actualizar el producto en el DataFrame
+            mask = self.productos_df['SKU'] == sku_original
+            self.productos_df.loc[mask, 'Nombre Producto/Servicio'] = self.txt_nombre.text()
+            self.productos_df.loc[mask, 'Nombre Etiqueta'] = nombre_etiqueta
+            self.productos_df.loc[mask, 'Variante'] = self.txt_variante.text()
+            self.productos_df.loc[mask, 'Tamanio'] = self.txt_tamanio.text()
+            self.productos_df.loc[mask, 'Posicion'] = self.txt_posicion.text()
+            self.productos_df.loc[mask, 'Stock'] = self.txt_stock.value()
+            self.productos_df.loc[mask, 'Costo Neto'] = self.txt_costo.value()
+            self.productos_df.loc[mask, 'Precio Unitario'] = self.txt_precio.value()
+            self.productos_df.loc[mask, 'Precio x mayor'] = self.txt_precio_mayor.value()
+            self.productos_df.loc[mask, 'Precio almacen'] = self.txt_precio_almacen.value()
+            self.productos_df.loc[mask, 'Precio handtag'] = self.txt_precio_handtag.value()
+            
+            # Actualizar la tabla visual
+            row = self.table.currentRow()
+            self.table.setItem(row, 0, QTableWidgetItem(nombre_etiqueta))
+            self.table.setItem(row, 1, QTableWidgetItem(self.txt_variante.text()))
+            self.table.setItem(row, 2, QTableWidgetItem(self.txt_tamanio.text()))
+            self.table.setItem(row, 3, QTableWidgetItem(self.txt_posicion.text()))
+            self.table.setItem(row, 4, QTableWidgetItem(f"S/ {self.txt_precio.value():.2f}"))
+            self.table.setItem(row, 5, QTableWidgetItem(f"S/ {self.txt_precio_handtag.value():.2f}"))
+            self.table.setItem(row, 7, QTableWidgetItem(str(self.txt_stock.value())))
+            
+            # Restaurar estado inicial de botones y formulario
+            self.btn_agregar.setText("Agregar Producto")
+            self.btn_agregar.clicked.disconnect()
+            self.btn_agregar.clicked.connect(self.agregar_producto)
+            self.btn_editar.setEnabled(True)
+            self.txt_sku.setEnabled(True)  # Volver a habilitar el SKU
+            
+            # Limpiar formulario
+            self.limpiar_formulario()
+            
+            QMessageBox.information(self, "Éxito", "Producto actualizado correctamente")
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al actualizar el producto: {str(e)}")
+            # Asegurar que los botones vuelvan a su estado original
+            self.btn_agregar.setText("Agregar Producto")
+            self.btn_agregar.clicked.disconnect()
+            self.btn_agregar.clicked.connect(self.agregar_producto)
+            self.btn_editar.setEnabled(True)
+            self.txt_sku.setEnabled(True)
     
     def limpiar_formulario(self):
         """Limpia todos los campos del formulario."""
