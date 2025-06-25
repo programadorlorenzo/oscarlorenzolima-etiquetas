@@ -25,6 +25,14 @@ def main():
     # Generar datos para etiquetas basados en el stock de cada producto
     datos_etiquetas = excel_manager.generar_datos_etiquetas()
     
+    # Guardar el Excel con los códigos de barras generados
+    # Podemos guardar una copia para no modificar el original
+    excel_backup = "data/productos_con_codigos.xlsx"
+    excel_manager.guardar_excel(excel_backup)
+    
+    # También podemos sobrescribir el original si se desea
+    excel_manager.guardar_excel()
+    
     # Si no hay etiquetas para generar, terminar
     if not datos_etiquetas:
         print("⚠️ No hay productos con stock para generar etiquetas")
@@ -32,8 +40,7 @@ def main():
     
     print(f"✅ Se generarán {len(datos_etiquetas)} etiquetas basadas en el stock de los productos.")
     print("Cada producto se replicará según su stock disponible.")
-    print("El primer producto es :", datos_etiquetas[20])
-    return;
+    print("El primer producto es:", datos_etiquetas[0])
     
     # Crear generador de etiquetas con página de 10.02cm de ancho
     generador = GeneradorEtiquetas("output/etiquetas_productos.pdf", custom_width=10.02*cm)

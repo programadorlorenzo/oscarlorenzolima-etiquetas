@@ -14,6 +14,7 @@ class ExcelManager:
         """
         self.file_path = file_path
         self.data = None
+        self.codigos_actualizados = False
     
     def cargar_excel(self, file_path=None):
         """Carga los datos desde un archivo Excel.
@@ -85,6 +86,7 @@ class ExcelManager:
     
     def generar_datos_etiquetas(self):
         """Genera los datos para las etiquetas, replicando cada producto según su stock.
+        También actualiza los códigos de barras en el DataFrame original.
         
         Returns:
             Lista de diccionarios con los datos para generar las etiquetas
@@ -94,9 +96,10 @@ class ExcelManager:
             
         datos_etiquetas = []
         total_etiquetas = 0
+        codigos_nuevos = {}  # Para registrar nuevos códigos generados
         
         # Iterar por cada fila (producto) en el DataFrame
-        for _, row in self.data.iterrows():
+        for indice, row in self.data.iterrows():
             # Obtener el stock del producto (asumiendo que es un entero positivo)
             stock = row.get('Stock', 0)
             try:
@@ -111,13 +114,17 @@ class ExcelManager:
             # Generar un único código de barras para este producto
             # Si ya tiene un código de barras, usarlo; si no, generarlo basado en el SKU
             barcode = str(row.get('Código Barras', '')).strip()
+            codigo_generado = False
+            
             if not barcode or barcode.lower() == 'nan':
                 barcode = self.generar_barcode(sku)
+                codigo_generado = True
+                codigos_nuevos[indice] = barcode  # Guardar para actualizar después
             
             # Para cada unidad en stock, crear una etiqueta con el mismo código de barras
             for _ in range(max(0, stock)):
                 etiqueta_data = {
-                    'product_name': row.get('Nombre Etiqueta', ''),
+                    'product_name': row.get('Nombre Etiqueta', '') or row.get('Nombre Producto/Servicio', ''),
                     'talla': row.get('Variante', ''),
                     'tamanio': row.get('Tamanio', ''),
                     'posicion': row.get('Posicion', ''),
@@ -130,5 +137,43 @@ class ExcelManager:
             
             total_etiquetas += stock
         
+        # Actualizar los códigos de barras nuevos en el DataFrame
+        if codigos_nuevos:
+            for indice, codigo in codigos_nuevos.items():
+                self.data.at[indice, 'Código Barras'] = codigo
+            self.codigos_actualizados = True
+            print(f"✅ Se generaron {len(codigos_nuevos)} nuevos códigos de barras")
+        
         print(f"✅ Generados datos para {total_etiquetas} etiquetas a partir de {len(self.data)} productos")
         return datos_etiquetas
+    
+    def guardar_excel(self, output_path=None):
+        """Guarda los datos actualizados con los nuevos códigos de barras al archivo Excel.
+        
+        Args:
+            output_path: Ruta para guardar el Excel actualizado (si es None, sobrescribe el original)
+            
+        Returns:
+            bool: True si se guardó correctamente, False en caso contrario
+        """
+        if self.data is None or not self.codigos_actualizados:
+            print("⚠️ No hay datos o códigos de barras actualizados para guardar")
+            return False
+        
+        # Si no se especifica ruta de salida, usar la original
+        if output_path is None:
+            output_path = self.file_path
+        
+        try:
+            # Crear el directorio de salida si no existe
+            output_dir = os.path.dirname(output_path)
+            if output_dir and not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+            
+            # Guardar el DataFrame actualizado al archivo Excel
+            self.data.to_excel(output_path, index=False)
+            print(f"✅ Archivo Excel actualizado guardado en: {output_path}")
+            return True
+        except Exception as e:
+            print(f"❌ Error al guardar el archivo Excel: {e}")
+            return False
