@@ -399,7 +399,17 @@ class EtiquetasApp:
 
 def main():
     """Función principal para iniciar la aplicación."""
+    # Force light mode on macOS
+    import os
+    os.environ['DARK_MODE_DISABLE'] = '1'  # This disables dark mode for the app
+    
     root = tk.Tk()
+    # Set background to light color
+    root.configure(bg="white")
+    # Configure ttk style to use light theme elements
+    style = ttk.Style()
+    style.theme_use('default')  # Using the default theme which is typically light
+    
     app = EtiquetasApp(root)
     root.mainloop()
 
