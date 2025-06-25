@@ -117,7 +117,7 @@ class ExcelManager:
             # Para cada unidad en stock, crear una etiqueta con el mismo código de barras
             for _ in range(max(0, stock)):
                 etiqueta_data = {
-                    'product_name': row.get('Nombre Producto/Servicio', ''),
+                    'product_name': row.get('Nombre Etiqueta', ''),
                     'talla': row.get('Variante', ''),
                     'tamanio': row.get('Tamanio', ''),
                     'posicion': row.get('Posicion', ''),
