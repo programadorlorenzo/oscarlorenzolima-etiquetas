@@ -44,9 +44,9 @@ class Etiqueta:
         c.translate(x_offset, y_offset)
         
         # Dibujar borde de la etiqueta
-        c.setStrokeColor(colors.black)
-        c.setLineWidth(0.25)
-        c.rect(0.05 * cm, 0.05 * cm, self.width - 0.1 * cm, self.height - 0.1 * cm)
+        # c.setStrokeColor(colors.black)
+        # c.setLineWidth(0.25)
+        # c.rect(0.05 * cm, 0.05 * cm, self.width - 0.1 * cm, self.height - 0.1 * cm)
         
         # Insertar imagen (logo)
         try:
@@ -73,7 +73,7 @@ class Etiqueta:
         
         # Tamaño y Posición (centrados y separados por guión)
         tam_pos_y = text_y - 0.25 * cm
-        c.setFont("Helvetica", 4.5)
+        c.setFont("Helvetica", 5)
         combined_text = self.tamanio + " - " + self.posicion
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
         
