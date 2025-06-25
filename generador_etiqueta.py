@@ -19,11 +19,11 @@ class GeneradorEtiquetas:
             custom_width: Ancho personalizado de la página (default: 10.02cm)
         """
         # Dimensiones de etiquetas (ajustado para optimizar el espacio)
-        self.etiqueta_width = 3.05 * cm  # Ligeramente reducido para evitar advertencias
+        self.etiqueta_width = 3 * cm  # Ligeramente reducido para evitar advertencias
         self.etiqueta_height = 4 * cm
         
         # Espacio entre etiquetas (muy reducido para acercar las etiquetas)
-        self.padding_x = 0.2 * cm   # Mínimo espacio horizontal
+        self.padding_x = 0.3 * cm   # Mínimo espacio horizontal
         self.padding_y = 0 * cm   # Reducido para acercar las etiquetas verticalmente
         
         # Margen de página (reducido al mínimo)
