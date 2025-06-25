@@ -4,7 +4,6 @@ from reportlab.lib.pagesizes import letter, A4
 from reportlab.graphics.barcode import code128
 from reportlab.lib import colors
 from PIL import Image
-import random
 import os
 
 class Etiqueta:
