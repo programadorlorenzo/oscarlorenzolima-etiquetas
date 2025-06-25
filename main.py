@@ -1,18 +1,42 @@
 from reportlab.lib.units import cm
 from generador_etiqueta import GeneradorEtiquetas
+from excel_manager import ExcelManager
+import os
 
-# Función principal
 def main():
     """Función principal para generar las etiquetas."""
-    # Crear generador de etiquetas con página de 10.02cm de ancho
-    generador = GeneradorEtiquetas("output/etiquetas_multiple.pdf", custom_width=10.02*cm)
+    # Ruta del archivo Excel (ajustar según corresponda)
+    excel_path = "data/productos.xlsx"
     
-    # Generar datos de ejemplo (múltiplos de 3 para páginas completas)
-    datos_etiquetas = generador.generar_mockup_datos(51)  # 17 páginas con 3 etiquetas cada una
+    # Verificar si el archivo existe
+    if not os.path.exists(excel_path):
+        print(f"❌ Error: El archivo Excel no existe en {excel_path}")
+        print("Por favor, coloque el archivo Excel en la carpeta 'data' o ajuste la ruta.")
+        return
+    
+    # Crear el directorio de salida si no existe
+    if not os.path.exists("output"):
+        os.makedirs("output")
+    
+    # Crear manejador de Excel y cargar datos
+    excel_manager = ExcelManager(excel_path)
+    excel_manager.cargar_excel()
+    
+    # Generar datos para etiquetas basados en el stock de cada producto
+    datos_etiquetas = excel_manager.generar_datos_etiquetas()
+    
+    # Si no hay etiquetas para generar, terminar
+    if not datos_etiquetas:
+        print("⚠️ No hay productos con stock para generar etiquetas")
+        return
+    
+    # Crear generador de etiquetas con página de 10.02cm de ancho
+    generador = GeneradorEtiquetas("output/etiquetas_productos.pdf", custom_width=10.02*cm)
     
     # Generar PDF con etiquetas
     generador.generar_pdf(datos_etiquetas)
-
+    
+    print(f"📄 PDF generado en: output/etiquetas_productos.pdf")
 
 if __name__ == "__main__":
     main()
