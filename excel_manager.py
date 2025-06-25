@@ -49,7 +49,7 @@ class ExcelManager:
             sku: El SKU del producto
             
         Returns:
-            String con el código de barras numérico
+            String con el código de barras numérico que nunca comienza con cero
         """
         # Asegurarse de que el SKU sea un string
         sku_str = str(sku).strip()
@@ -70,8 +70,16 @@ class ExcelManager:
         random.seed()
         
         # Combinar el hash del SKU con el factor aleatorio para generar un código de barras
-        # Limitamos el resultado a 12 dígitos que es común en códigos de barras
-        barcode = str((hash_num + random_factor) % 1000000000000).zfill(12)
+        combined_num = (hash_num + random_factor) % 999999999999  # 12 dígitos máximo
+        
+        # Asegurarnos de que el primer dígito no sea cero (1-9)
+        first_digit = 7
+        
+        # Formatear el resto para que tenga 11 dígitos (total 12 con el primer dígito)
+        rest_digits = str(combined_num).zfill(11)[-11:]
+        
+        # Combinar el primer dígito con el resto
+        barcode = str(first_digit) + rest_digits
         
         return barcode
     
