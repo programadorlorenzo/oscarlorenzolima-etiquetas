@@ -67,12 +67,12 @@ class Etiqueta:
             
         # Nombre del producto (debajo de imagen)
         text_y = img_y - 0.3 * cm
-        c.setFont("Helvetica", 6)
+        c.setFont("Helvetica-Bold", 5.6)
         c.drawCentredString(self.width / 2, text_y, self.product_name)
         
         # Tamaño y Posición (centrados y separados por guión)
         tam_pos_y = text_y - 0.25 * cm
-        c.setFont("Helvetica", 5.5)
+        c.setFont("Helvetica-Bold", 5.2)
         combined_text = self.tamanio + " - " + self.posicion
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
         
@@ -123,7 +123,7 @@ class Etiqueta:
         c.drawCentredString(self.width / 2, barcode_y - 0.18 * cm, self.barcode_value)
         
         # SKU (al final con letra más pequeña)
-        c.setFont("Helvetica", 4)
+        c.setFont("Helvetica-Bold", 4)
         sku_y = 0.15 * cm
         c.drawCentredString(self.width / 2, sku_y, self.sku)
         
