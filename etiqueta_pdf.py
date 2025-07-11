@@ -67,18 +67,18 @@ class Etiqueta:
             
         # Nombre del producto (debajo de imagen)
         text_y = img_y - 0.3 * cm
-        c.setFont("Helvetica", 6.1)
+        c.setFont("Helvetica", 6)
         c.drawCentredString(self.width / 2, text_y, self.product_name)
         
         # Tamaño y Posición (centrados y separados por guión)
         tam_pos_y = text_y - 0.25 * cm
-        c.setFont("Helvetica-Bold", 5.2)
+        c.setFont("Helvetica-Bold", 5.5)
         combined_text = self.tamanio + " - " + self.posicion
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
         
         # Talla (debajo del nombre y tamaño/posición)
         talla_y = tam_pos_y - 0.45 * cm
-        c.setFont("Helvetica-Bold", 8)
+        c.setFont("Helvetica-Bold", 9)
         c.drawCentredString(self.width / 2, talla_y, self.talla)
         
         # Distribución del espacio vertical restante
@@ -89,7 +89,7 @@ class Etiqueta:
         
         # Precio (en un cuadro, entre la talla y el código de barras)
         precio_y = talla_y - espacio_entre_elementos - 0.5 * cm
-        c.setFont("Helvetica-Bold", 9.5)
+        c.setFont("Helvetica-Bold", 9.7)
         
         # Calcular dimensiones del cuadro para el precio
         price_box_width = c.stringWidth(self.precio, "Helvetica-Bold", 7) + 20
