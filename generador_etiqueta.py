@@ -71,58 +71,6 @@ class GeneradorEtiquetas:
         # Calcular etiquetas por página
         self.etiquetas_por_pagina = self.cols * self.rows
     
-    def generar_mockup_datos(self, cantidad=50):
-        """Genera datos de ejemplo para etiquetas.
-        
-        Args:
-            cantidad: Número de etiquetas a generar
-            
-        Returns:
-            Lista de diccionarios con datos para etiquetas
-        """
-        # Posibles valores para los diferentes campos
-        productos = [
-            "Jean Renata Verde Menta", 
-            "Jean Carolina Azul", 
-            "Blusa Camila Blanco", 
-            "Falda Patricia Negro",
-            "Pantalón Claudia Gris",
-            "Blusa Mariana Rosado",
-            "Vestido Elena Dorado",
-            "Short Valeria Celeste",
-            "Conjunto María Beige"
-        ]
-        
-        tallas = ["Talla 24", "Talla 26", "Talla 28", "Talla 30", "Talla 32", "Talla 34", "Talla 36"]
-        tamanios = ["Petite", "Regular", "Tall"]
-        posiciones = ["Cadera", "Cintura", "Muslo"]
-        precios = ["S/ 89.90", "S/ 99.90", "S/ 115.00", "S/ 129.90", "S/ 149.90", "S/ 159.90"]
-        
-        datos = []
-        for i in range(cantidad):
-            # Genera un número de SKU único con formato similar al ejemplo
-            sku_base = f"{random.randint(50000, 59999)}-"
-            sku_letra = random.choice(['R', 'C', 'B', 'P', 'V'])
-            sku_color = random.choice(['VM', 'AZ', 'BL', 'NG', 'GR', 'RS'])
-            sku_num = f"{random.randint(20, 38)}{random.randint(1000, 9999)}"
-            sku = f"{sku_base}{sku_letra}-{sku_color}{sku_num}"
-            
-            # Genera un código de barras de 12 dígitos
-            barcode = ''.join([str(random.randint(0, 9)) for _ in range(12)])
-            
-            datos.append({
-                'product_name': random.choice(productos),
-                'talla': random.choice(tallas),
-                'tamanio': random.choice(tamanios),
-                'posicion': random.choice(posiciones),
-                'precio': random.choice(precios),
-                'sku': sku,
-                'barcode_value': barcode,
-                'image_path': 'assets/logo.png'
-            })
-        
-        return datos
-    
     def generar_pdf(self, datos_etiquetas):
         """Genera un PDF con las etiquetas especificadas.
         

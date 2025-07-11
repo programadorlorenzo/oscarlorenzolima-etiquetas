@@ -37,6 +37,7 @@ class ExcelManager:
         try:
             # Leer el archivo Excel, asumiendo que la primera fila son encabezados
             self.data = pd.read_excel(self.file_path)
+            print(self.data.head())  # Mostrar las primeras filas para verificar la carga
             print(f"✅ Archivo Excel cargado correctamente con {len(self.data)} productos")
             return self.data
         except Exception as e:

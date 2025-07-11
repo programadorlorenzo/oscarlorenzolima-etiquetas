@@ -2,11 +2,12 @@ from reportlab.lib.units import cm
 from generador_etiqueta import GeneradorEtiquetas
 from excel_manager import ExcelManager
 import os
+from datetime import datetime
 
 def main():
     """Función principal para generar las etiquetas."""
     # Ruta del archivo Excel (ajustar según corresponda)
-    excel_path = "data/productos.xlsx"
+    excel_path = "data/producto_con_codigos_tercer_entrega_solo_para_escanear.xlsx"
     
     # Verificar si el archivo existe
     if not os.path.exists(excel_path):
@@ -24,14 +25,16 @@ def main():
     
     # Generar datos para etiquetas basados en el stock de cada producto
     datos_etiquetas = excel_manager.generar_datos_etiquetas()
+    print(datos_etiquetas)
     
     # Guardar el Excel con los códigos de barras generados
     # Podemos guardar una copia para no modificar el original
-    excel_backup = "data/productos_con_codigos.xlsx"
+    current_time = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    excel_backup = f"data/productos_con_codigos_{current_time}.xlsx"
     excel_manager.guardar_excel(excel_backup)
     
     # También podemos sobrescribir el original si se desea
-    excel_manager.guardar_excel()
+    # excel_manager.guardar_excel()
     
     # Si no hay etiquetas para generar, terminar
     if not datos_etiquetas:

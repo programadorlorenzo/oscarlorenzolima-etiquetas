@@ -72,13 +72,13 @@ class Etiqueta:
         
         # Tamaño y Posición (centrados y separados por guión)
         tam_pos_y = text_y - 0.25 * cm
-        c.setFont("Helvetica-Bold", 5.5)
+        c.setFont("Helvetica-Bold", 5.8)
         combined_text = self.tamanio + " - " + self.posicion
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
         
         # Talla (debajo del nombre y tamaño/posición)
         talla_y = tam_pos_y - 0.45 * cm
-        c.setFont("Helvetica-Bold", 9)
+        c.setFont("Helvetica-Bold", 9.2)
         c.drawCentredString(self.width / 2, talla_y, self.talla)
         
         # Distribución del espacio vertical restante
@@ -113,7 +113,15 @@ class Etiqueta:
         c.drawCentredString(self.width / 2, rect_center_y - font_offset, self.precio)
         
         # Código de barras (ahora más abajo con mejor distribución)
-        barcode = code128.Code128(self.barcode_value, barHeight=0.7 * cm, barWidth=0.025 * cm)
+        # Código de barras optimizado para mejor escaneo
+        barcode = code128.Code128(
+            self.barcode_value,
+            width=self.width - 0.2 * cm,  # Ancho de barra ajustado
+            barHeight=0.7 * cm,     # Mayor altura para mejor lectura
+            barWidth=0.027 * cm,      # Ancho de barra optimizado
+            checksum=1,              # Incluir checksum para validación
+            quiet=True               # Incluir zona silenciosa (quiet zone)
+        )
         barcode_x = (self.width - barcode.width) / 2
         barcode_y = rect_y - espacio_entre_elementos - 0.7 * cm
         barcode.drawOn(c, barcode_x, barcode_y)
