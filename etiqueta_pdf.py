@@ -18,8 +18,8 @@ class Etiqueta:
         self.barcode_value = datos.get('barcode_value', '')
         self.product_name = datos.get('product_name', '')
         self.talla = datos.get('talla', '')
-        self.tamanio = datos.get('tamanio', '')
-        self.posicion = datos.get('posicion', '')
+        self.tamanio = datos.get('tamanio', '').upper()
+        self.posicion = datos.get('posicion', '').upper()
         self.precio = datos.get('precio', '')
         self.sku = datos.get('sku', '')
         self.image_path = datos.get('image_path', 'assets/logo.png')
@@ -67,11 +67,11 @@ class Etiqueta:
             
         # Nombre del producto (debajo de imagen)
         text_y = img_y - 0.3 * cm
-        c.setFont("Helvetica", 6)
+        c.setFont("Helvetica", 7)
         c.drawCentredString(self.width / 2, text_y, self.product_name)
         
         # Tamaño y Posición (centrados y separados por guión)
-        tam_pos_y = text_y - 0.25 * cm
+        tam_pos_y = text_y - 0.30 * cm
         c.setFont("Helvetica-Bold", 5.8)
         combined_text = self.tamanio + " - " + self.posicion
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
@@ -117,8 +117,8 @@ class Etiqueta:
         barcode = code128.Code128(
             self.barcode_value,
             width=self.width - 0.2 * cm,  # Ancho de barra ajustado
-            barHeight=0.7 * cm,     # Mayor altura para mejor lectura
-            barWidth=0.027 * cm,      # Ancho de barra optimizado
+            barHeight=0.75 * cm,     # Mayor altura para mejor lectura
+            barWidth=0.028 * cm,      # Ancho de barra optimizado
             checksum=1,              # Incluir checksum para validación
             quiet=True               # Incluir zona silenciosa (quiet zone)
         )

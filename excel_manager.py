@@ -75,7 +75,7 @@ class ExcelManager:
         combined_num = (hash_num + random_factor) % 999999999999  # 12 dígitos máximo
         
         # Asegurarnos de que el primer dígito no sea cero (1-9)
-        first_digit = 7
+        first_digit = 6
         
         # Formatear el resto para que tenga 11 dígitos (total 12 con el primer dígito)
         rest_digits = str(combined_num).zfill(11)[-11:]

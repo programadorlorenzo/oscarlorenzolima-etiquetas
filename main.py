@@ -7,7 +7,7 @@ from datetime import datetime
 def main():
     """Función principal para generar las etiquetas."""
     # Ruta del archivo Excel (ajustar según corresponda)
-    excel_path = "data/productos_con_codigos_cuarta_entrega_solo_para_escanear.xlsx"
+    excel_path = "data/productos.xlsx"
     
     # Verificar si el archivo existe
     if not os.path.exists(excel_path):
@@ -34,7 +34,7 @@ def main():
     excel_manager.guardar_excel(excel_backup)
     
     # También podemos sobrescribir el original si se desea
-    # excel_manager.guardar_excel()
+    excel_manager.guardar_excel()
     
     # Si no hay etiquetas para generar, terminar
     if not datos_etiquetas:
