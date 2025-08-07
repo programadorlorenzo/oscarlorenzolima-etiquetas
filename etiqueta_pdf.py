@@ -18,8 +18,8 @@ class Etiqueta:
         self.barcode_value = datos.get('barcode_value', '')
         self.product_name = datos.get('product_name', '')
         self.talla = datos.get('talla', '')
-        self.tamanio = datos.get('tamanio', '').upper()
-        self.posicion = datos.get('posicion', '').upper()
+        self.tamanio = str(datos.get('tamanio', '')).upper()
+        self.posicion = str(datos.get('posicion', '')).upper()
         self.precio = datos.get('precio', '')
         self.sku = datos.get('sku', '')
         self.image_path = datos.get('image_path', 'assets/logo.png')
@@ -73,7 +73,7 @@ class Etiqueta:
         # Tamaño y Posición (centrados y separados por guión)
         tam_pos_y = text_y - 0.30 * cm
         c.setFont("Helvetica-Bold", 5.8)
-        combined_text = self.tamanio + " - " + self.posicion
+        combined_text = self.tamanio
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
         
         # Talla (debajo del nombre y tamaño/posición)
