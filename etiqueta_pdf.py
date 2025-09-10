@@ -73,7 +73,10 @@ class Etiqueta:
         # Tamaño y Posición (centrados y separados por guión)
         tam_pos_y = text_y - 0.30 * cm
         c.setFont("Helvetica-Bold", 5.8)
-        combined_text = self.tamanio + " - " + self.posicion
+        if self.posicion == "NAN" or self.posicion == "":
+            combined_text = self.tamanio
+        else:
+            combined_text = self.tamanio + " - " + self.posicion
         c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
         
         # Talla (debajo del nombre y tamaño/posición)
