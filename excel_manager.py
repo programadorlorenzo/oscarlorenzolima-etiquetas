@@ -129,6 +129,7 @@ class ExcelManager:
                     'talla': row.get('Variante', ''),
                     'tamanio': row.get('Tamanio', ''),
                     'posicion': row.get('Posicion', ''),
+                    'fit': row.get('Fit', ''),
                     'precio': f"S/ {row.get('Precio handtag', 0):.2f}",
                     'sku': sku,
                     'barcode_value': barcode,

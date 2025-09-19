@@ -26,7 +26,7 @@ class EtiquetasAppQt(QMainWindow):
         # DataFrame para almacenar productos
         self.productos_df = pd.DataFrame(columns=[
             'Clasificación', 'Tipo de producto o servicio', 'Nombre Producto/Servicio',
-            'Nombre Etiqueta', 'Variante', 'Tamanio', 'Posicion', 'Marca', 
+            'Nombre Etiqueta', 'Variante', 'Tamanio', 'Posicion', 'Fit', 'Marca', 
             'Permite Decimal', 'Código Barras', 'SKU', 'Controla Stock',
             'Stock', 'Costo Neto', 'Precio Unitario', 'Precio x mayor',
             'Precio almacen', 'Precio handtag'
@@ -92,28 +92,32 @@ class EtiquetasAppQt(QMainWindow):
         form_layout.addWidget(self.txt_posicion, 1, 5)
         
         # Tercera fila
-        form_layout.addWidget(QLabel("Precio Unitario:"), 2, 0)
+        form_layout.addWidget(QLabel("Fit:"), 2, 0)
+        self.txt_fit = QLineEdit()
+        form_layout.addWidget(self.txt_fit, 2, 1)
+        
+        form_layout.addWidget(QLabel("Precio Unitario:"), 2, 2)
         self.txt_precio = QDoubleSpinBox()
         self.txt_precio.setMaximum(9999.99)
-        form_layout.addWidget(self.txt_precio, 2, 1)
+        form_layout.addWidget(self.txt_precio, 2, 3)
         
-        form_layout.addWidget(QLabel("Precio Handtag:"), 2, 2)
+        form_layout.addWidget(QLabel("Precio Handtag:"), 2, 4)
         self.txt_precio_handtag = QDoubleSpinBox()
         self.txt_precio_handtag.setMaximum(9999.99)
-        form_layout.addWidget(self.txt_precio_handtag, 2, 3)
+        form_layout.addWidget(self.txt_precio_handtag, 2, 5)
         
-        form_layout.addWidget(QLabel("Stock:"), 2, 4)
+        # Cuarta fila
+        form_layout.addWidget(QLabel("Stock:"), 3, 0)
         self.txt_stock = QSpinBox()
         self.txt_stock.setMinimum(0)
         self.txt_stock.setMaximum(9999)
         self.txt_stock.setValue(1)
-        form_layout.addWidget(self.txt_stock, 2, 5)
+        form_layout.addWidget(self.txt_stock, 3, 1)
         
-        # Cuarta fila
-        form_layout.addWidget(QLabel("Costo Neto:"), 3, 0)
+        form_layout.addWidget(QLabel("Costo Neto:"), 3, 2)
         self.txt_costo = QDoubleSpinBox()
         self.txt_costo.setMaximum(9999.99)
-        form_layout.addWidget(self.txt_costo, 3, 1)
+        form_layout.addWidget(self.txt_costo, 3, 3)
         
         form_layout.addWidget(QLabel("Precio x Mayor:"), 3, 2)
         self.txt_precio_mayor = QDoubleSpinBox()
@@ -248,6 +252,7 @@ class EtiquetasAppQt(QMainWindow):
             'Variante': self.txt_variante.text(),
             'Tamanio': self.txt_tamanio.text(),
             'Posicion': self.txt_posicion.text(),
+            'Fit': self.txt_fit.text(),
             'Marca': '',
             'Permite Decimal': 'No',
             'Código Barras': barcode,
@@ -321,6 +326,7 @@ class EtiquetasAppQt(QMainWindow):
             self.txt_variante.setText(str(producto.get('Variante', '')))
             self.txt_tamanio.setText(str(producto.get('Tamanio', '')))
             self.txt_posicion.setText(str(producto.get('Posicion', '')))
+            self.txt_fit.setText(str(producto.get('Fit', '')))
             self.txt_sku.setText(str(producto.get('SKU', '')))
             self.txt_sku.setEnabled(False)  # No permitir cambiar el SKU porque es la clave
             
@@ -364,6 +370,7 @@ class EtiquetasAppQt(QMainWindow):
             self.productos_df.loc[mask, 'Variante'] = self.txt_variante.text()
             self.productos_df.loc[mask, 'Tamanio'] = self.txt_tamanio.text()
             self.productos_df.loc[mask, 'Posicion'] = self.txt_posicion.text()
+            self.productos_df.loc[mask, 'Fit'] = self.txt_fit.text()
             self.productos_df.loc[mask, 'Stock'] = self.txt_stock.value()
             self.productos_df.loc[mask, 'Costo Neto'] = self.txt_costo.value()
             self.productos_df.loc[mask, 'Precio Unitario'] = self.txt_precio.value()
@@ -409,6 +416,7 @@ class EtiquetasAppQt(QMainWindow):
         self.txt_variante.clear()
         self.txt_tamanio.clear()
         self.txt_posicion.clear()
+        self.txt_fit.clear()
         self.txt_sku.clear()
         self.txt_precio.setValue(0.0)
         self.txt_stock.setValue(1)

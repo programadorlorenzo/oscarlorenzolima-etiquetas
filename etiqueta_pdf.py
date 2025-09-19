@@ -20,6 +20,7 @@ class Etiqueta:
         self.talla = datos.get('talla', '')
         self.tamanio = str(datos.get('tamanio', '')).upper()
         self.posicion = str(datos.get('posicion', '')).upper()
+        self.fit = str(datos.get('fit', '')).upper()
         self.precio = datos.get('precio', '')
         self.sku = datos.get('sku', '')
         self.image_path = datos.get('image_path', 'assets/logo.png')
@@ -70,17 +71,43 @@ class Etiqueta:
         c.setFont("Helvetica", 7)
         c.drawCentredString(self.width / 2, text_y, self.product_name)
         
-        # Tamaño y Posición (centrados y separados por guión)
-        tam_pos_y = text_y - 0.30 * cm
-        c.setFont("Helvetica-Bold", 5.8)
-        if self.posicion == "NAN" or self.posicion == "":
-            combined_text = self.tamanio
-        else:
-            combined_text = self.tamanio + " - " + self.posicion
-        c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
+        # FIT - solo si tiene datos válidos
+        fit_y = text_y - 0.3 * cm  # Aumentado margen de 0.25 a 0.3
+        tiene_fit = False
         
-        # Talla (debajo del nombre y tamaño/posición)
-        talla_y = tam_pos_y - 0.45 * cm
+        if self.fit and self.fit != "NAN" and self.fit != "":
+            c.setFont("Helvetica-Bold", 5.8)
+            c.drawCentredString(self.width / 2, fit_y, self.fit)
+            tiene_fit = True
+        
+        # Tamaño y Posición (debajo del FIT o del nombre)
+        if tiene_fit:
+            tam_pos_y = fit_y - 0.3 * cm  # Aumentado margen de 0.25 a 0.3
+        else:
+            tam_pos_y = text_y - 0.3 * cm  # Aumentado margen de 0.25 a 0.3
+            
+        tiene_tamanio_posicion = False
+        
+        if (self.tamanio and self.tamanio != "NAN" and self.tamanio != "") or \
+           (self.posicion and self.posicion != "NAN" and self.posicion != ""):
+            c.setFont("Helvetica-Bold", 5.8)
+            if self.posicion == "NAN" or self.posicion == "" or not self.posicion:
+                combined_text = self.tamanio
+            elif self.tamanio == "NAN" or self.tamanio == "" or not self.tamanio:
+                combined_text = self.posicion
+            else:
+                combined_text = self.tamanio + " - " + self.posicion
+            c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
+            tiene_tamanio_posicion = True
+        
+        # Talla (debajo de tamaño/posición, FIT, o nombre)
+        if tiene_tamanio_posicion:
+            talla_y = tam_pos_y - 0.45 * cm  # Aumentado margen de 0.4 a 0.45
+        elif tiene_fit:
+            talla_y = fit_y - 0.45 * cm  # Aumentado margen de 0.4 a 0.45
+        else:
+            talla_y = text_y - 0.45 * cm  # Aumentado margen de 0.4 a 0.45
+        
         c.setFont("Helvetica-Bold", 9.2)
         c.drawCentredString(self.width / 2, talla_y, self.talla)
         
@@ -92,7 +119,7 @@ class Etiqueta:
         
         # Precio (en un cuadro, entre la talla y el código de barras)
         precio_y = talla_y - espacio_entre_elementos - 0.5 * cm
-        c.setFont("Helvetica-Bold", 9.7)
+        c.setFont("Helvetica-Bold", 10.5)  # Aumentado tamaño de 9.7 a 10.5
         
         # Calcular dimensiones del cuadro para el precio
         price_box_width = c.stringWidth(self.precio, "Helvetica-Bold", 7) + 20
