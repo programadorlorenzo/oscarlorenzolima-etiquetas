@@ -66,25 +66,26 @@ class Etiqueta:
             img_height = 0.6 * cm
             img_y = self.height - img_height - 0.1 * cm
             
-        # Nombre del producto (debajo de imagen)
-        text_y = img_y - 0.3 * cm
-        c.setFont("Helvetica", 7)
-        c.drawCentredString(self.width / 2, text_y, self.product_name)
-        
-        # FIT - solo si tiene datos válidos
-        fit_y = text_y - 0.3 * cm  # Aumentado margen de 0.25 a 0.3
+        # FIT - inmediatamente debajo del logo (solo si tiene datos válidos)
+        fit_y = img_y - 0.35 * cm  # Aumentado margen de 0.25 a 0.35
         tiene_fit = False
         
         if self.fit and self.fit != "NAN" and self.fit != "":
             c.setFont("Helvetica-Bold", 5.8)
             c.drawCentredString(self.width / 2, fit_y, self.fit)
             tiene_fit = True
-        
-        # Tamaño y Posición (debajo del FIT o del nombre)
+            
+        # Nombre del producto (debajo del FIT o del logo si no hay FIT)
         if tiene_fit:
-            tam_pos_y = fit_y - 0.3 * cm  # Aumentado margen de 0.25 a 0.3
+            text_y = fit_y - 0.35 * cm  # Aumentado margen de 0.3 a 0.35
         else:
-            tam_pos_y = text_y - 0.3 * cm  # Aumentado margen de 0.25 a 0.3
+            text_y = img_y - 0.4 * cm  # Aumentado margen de 0.3 a 0.4
+        
+        c.setFont("Helvetica", 7)
+        c.drawCentredString(self.width / 2, text_y, self.product_name)
+        
+        # Tamaño y Posición (debajo del nombre del producto)
+        tam_pos_y = text_y - 0.35 * cm  # Aumentado margen de 0.3 a 0.35
             
         tiene_tamanio_posicion = False
         
@@ -100,13 +101,11 @@ class Etiqueta:
             c.drawCentredString(self.width / 2, tam_pos_y, combined_text)
             tiene_tamanio_posicion = True
         
-        # Talla (debajo de tamaño/posición, FIT, o nombre)
+        # Talla (debajo de tamaño/posición o del nombre)
         if tiene_tamanio_posicion:
-            talla_y = tam_pos_y - 0.45 * cm  # Aumentado margen de 0.4 a 0.45
-        elif tiene_fit:
-            talla_y = fit_y - 0.45 * cm  # Aumentado margen de 0.4 a 0.45
+            talla_y = tam_pos_y - 0.4 * cm  # Reducido margen de 0.5 a 0.4 (sube la talla)
         else:
-            talla_y = text_y - 0.45 * cm  # Aumentado margen de 0.4 a 0.45
+            talla_y = text_y - 0.4 * cm  # Reducido margen de 0.5 a 0.4 (sube la talla)
         
         c.setFont("Helvetica-Bold", 9.2)
         c.drawCentredString(self.width / 2, talla_y, self.talla)
@@ -118,7 +117,7 @@ class Etiqueta:
         espacio_entre_elementos = (espacio_vertical_restante - espacio_para_precio - espacio_para_barcode) / 3
         
         # Precio (en un cuadro, entre la talla y el código de barras)
-        precio_y = talla_y - espacio_entre_elementos - 0.5 * cm
+        precio_y = talla_y - espacio_entre_elementos - 0.45 * cm  # Aumentado de 0.35 a 0.45 para bajar el precio
         c.setFont("Helvetica-Bold", 10.5)  # Aumentado tamaño de 9.7 a 10.5
         
         # Calcular dimensiones del cuadro para el precio
@@ -153,7 +152,7 @@ class Etiqueta:
             quiet=True               # Incluir zona silenciosa (quiet zone)
         )
         barcode_x = (self.width - barcode.width) / 2
-        barcode_y = rect_y - espacio_entre_elementos - 0.7 * cm
+        barcode_y = rect_y - espacio_entre_elementos - 0.75 * cm  # Reducido de 0.85 a 0.75 para subir el código
         barcode.drawOn(c, barcode_x, barcode_y)
         
         # Número del código de barras debajo del código
@@ -162,7 +161,7 @@ class Etiqueta:
         
         # SKU (al final con letra más pequeña)
         c.setFont("Helvetica-Bold", 4.5)
-        sku_y = 0.1 * cm
+        sku_y = 0.05 * cm  # Reducido de 0.1 a 0.05 para bajar un poquito el SKU
         c.drawCentredString(self.width / 2, sku_y, self.sku)
         
         # Restaurar el estado del canvas
