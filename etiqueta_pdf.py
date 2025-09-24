@@ -18,9 +18,9 @@ class Etiqueta:
         self.barcode_value = datos.get('barcode_value', '')
         self.product_name = datos.get('product_name', '')
         self.talla = datos.get('talla', '')
-        self.tamanio = str(datos.get('tamanio', '')).upper()
-        self.posicion = str(datos.get('posicion', '')).upper()
-        self.fit = str(datos.get('fit', '')).upper()
+        self.tamanio = str(datos.get('tamanio', ''))
+        self.posicion = str(datos.get('posicion', ''))
+        self.fit = str(datos.get('fit', ''))
         self.precio = datos.get('precio', '')
         self.sku = datos.get('sku', '')
         self.image_path = datos.get('image_path', 'assets/logo.png')
@@ -71,7 +71,7 @@ class Etiqueta:
         tiene_fit = False
         
         if self.fit and self.fit != "NAN" and self.fit != "":
-            c.setFont("Helvetica-Bold", 5.8)
+            c.setFont("Helvetica-BoldOblique", 7.2)  # Aumentado de 6.5 a 7.2 y cambiado a cursiva
             c.drawCentredString(self.width / 2, fit_y, self.fit)
             tiene_fit = True
             
@@ -81,7 +81,7 @@ class Etiqueta:
         else:
             text_y = img_y - 0.4 * cm  # Aumentado margen de 0.3 a 0.4
         
-        c.setFont("Helvetica", 7)
+        c.setFont("Helvetica-Bold", 8)  # Aumentado de 7 a 8 puntos
         c.drawCentredString(self.width / 2, text_y, self.product_name)
         
         # Tamaño y Posición (debajo del nombre del producto)
@@ -91,7 +91,7 @@ class Etiqueta:
         
         if (self.tamanio and self.tamanio != "NAN" and self.tamanio != "") or \
            (self.posicion and self.posicion != "NAN" and self.posicion != ""):
-            c.setFont("Helvetica-Bold", 5.8)
+            c.setFont("Helvetica", 6.5)  # Cambiado de Helvetica-BoldOblique a Helvetica (normal, sin cursiva ni negrita)
             if self.posicion == "NAN" or self.posicion == "" or not self.posicion:
                 combined_text = self.tamanio
             elif self.tamanio == "NAN" or self.tamanio == "" or not self.tamanio:
