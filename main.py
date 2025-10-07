@@ -25,7 +25,18 @@ def main():
     
     # Generar datos para etiquetas basados en el stock de cada producto
     datos_etiquetas = excel_manager.generar_datos_etiquetas()
-    print(datos_etiquetas)
+
+    # Helper local para mostrar los datos sin revelar el SKU
+    def mask_sku(lista):
+        masked = []
+        for d in lista:
+            copy = dict(d)
+            if 'sku' in copy:
+                copy['sku'] = '*** oculto ***'
+            masked.append(copy)
+        return masked
+
+    print(mask_sku(datos_etiquetas))
     
     # Guardar el Excel con los códigos de barras generados
     # Podemos guardar una copia para no modificar el original
@@ -42,7 +53,7 @@ def main():
         return
     print(f"[OK] Se generarán {len(datos_etiquetas)} etiquetas basadas en el stock de los productos.")
     print("Cada producto se replicará según su stock disponible.")
-    print("El primer producto es:", datos_etiquetas[0])
+    print("El primer producto es:", mask_sku([datos_etiquetas[0]])[0])
     
     # Crear generador de etiquetas con página de 10.02cm de ancho
     generador = GeneradorEtiquetas("output/etiquetas_productos.pdf")
