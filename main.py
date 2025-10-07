@@ -11,7 +11,7 @@ def main():
     
     # Verificar si el archivo existe
     if not os.path.exists(excel_path):
-        print(f"❌ Error: El archivo Excel no existe en {excel_path}")
+        print(f"[ERROR] El archivo Excel no existe en {excel_path}")
         print("Por favor, coloque el archivo Excel en la carpeta 'data' o ajuste la ruta.")
         return
     
@@ -38,20 +38,19 @@ def main():
     
     # Si no hay etiquetas para generar, terminar
     if not datos_etiquetas:
-        print("⚠️ No hay productos con stock para generar etiquetas")
+        print("[AVISO] No hay productos con stock para generar etiquetas")
         return
-    
-    print(f"✅ Se generarán {len(datos_etiquetas)} etiquetas basadas en el stock de los productos.")
+    print(f"[OK] Se generarán {len(datos_etiquetas)} etiquetas basadas en el stock de los productos.")
     print("Cada producto se replicará según su stock disponible.")
     print("El primer producto es:", datos_etiquetas[0])
     
     # Crear generador de etiquetas con página de 10.02cm de ancho
-    generador = GeneradorEtiquetas("output/etiquetas_productos.pdf", custom_width=10.02*cm)
+    generador = GeneradorEtiquetas("output/etiquetas_productos.pdf")
     
     # Generar PDF con etiquetas
     generador.generar_pdf(datos_etiquetas)
     
-    print(f"📄 PDF generado en: output/etiquetas_productos.pdf")
+    print(f"[OK] PDF generado en: output/etiquetas_productos.pdf")
 
 if __name__ == "__main__":
     main()

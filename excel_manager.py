@@ -38,10 +38,10 @@ class ExcelManager:
             # Leer el archivo Excel, asumiendo que la primera fila son encabezados
             self.data = pd.read_excel(self.file_path)
             print(self.data.head())  # Mostrar las primeras filas para verificar la carga
-            print(f"✅ Archivo Excel cargado correctamente con {len(self.data)} productos")
+            print(f"[OK] Archivo Excel cargado correctamente con {len(self.data)} productos")
             return self.data
         except Exception as e:
-            print(f"❌ Error al cargar el archivo Excel: {e}")
+            print(f"[ERROR] Error al cargar el archivo Excel: {e}")
             raise
     
     def generar_barcode(self, sku):
@@ -106,7 +106,7 @@ class ExcelManager:
             try:
                 stock = int(stock)
             except (ValueError, TypeError):
-                print(f"⚠️ Advertencia: Stock no válido para {row.get('Nombre Producto/Servicio', '')}, utilizando 0")
+                print(f"[AVISO] Advertencia: Stock no válido para {row.get('Nombre Producto/Servicio', '')}, utilizando 0")
                 stock = 0
             
             # Obtener el SKU
@@ -133,7 +133,7 @@ class ExcelManager:
                     'precio': f"S/ {row.get('Precio handtag', 0):.2f}",
                     'sku': sku,
                     'barcode_value': barcode,
-                    'image_path': 'assets/logo.png'
+                    'image_path': 'assets/logo.jpeg'  # Ruta fija al logo
                 }
                 datos_etiquetas.append(etiqueta_data)
             
@@ -144,9 +144,9 @@ class ExcelManager:
             for indice, codigo in codigos_nuevos.items():
                 self.data.at[indice, 'Código Barras'] = codigo
             self.codigos_actualizados = True
-            print(f"✅ Se generaron {len(codigos_nuevos)} nuevos códigos de barras")
-        
-        print(f"✅ Generados datos para {total_etiquetas} etiquetas a partir de {len(self.data)} productos")
+            print(f"[OK] Se generaron {len(codigos_nuevos)} nuevos códigos de barras")
+
+        print(f"[OK] Generados datos para {total_etiquetas} etiquetas a partir de {len(self.data)} productos")
         return datos_etiquetas
     
     def guardar_excel(self, output_path=None):
@@ -159,7 +159,7 @@ class ExcelManager:
             bool: True si se guardó correctamente, False en caso contrario
         """
         if self.data is None or not self.codigos_actualizados:
-            print("⚠️ No hay datos o códigos de barras actualizados para guardar")
+            print("[AVISO] No hay datos o códigos de barras actualizados para guardar")
             return False
         
         # Si no se especifica ruta de salida, usar la original
@@ -174,8 +174,8 @@ class ExcelManager:
             
             # Guardar el DataFrame actualizado al archivo Excel
             self.data.to_excel(output_path, index=False)
-            print(f"✅ Archivo Excel actualizado guardado en: {output_path}")
+            print(f"[OK] Archivo Excel actualizado guardado en: {output_path}")
             return True
         except Exception as e:
-            print(f"❌ Error al guardar el archivo Excel: {e}")
+            print(f"[ERROR] Error al guardar el archivo Excel: {e}")
             return False
