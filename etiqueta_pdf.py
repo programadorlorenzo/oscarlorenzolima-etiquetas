@@ -187,12 +187,11 @@ class Etiqueta:
         bar_height = min(1.2 * cm, espacio_disponible * 0.85)  # Usar 85% del espacio disponible
         target_w = self.width - 0.2 * cm  # Margen horizontal para el nuevo ancho
 
-        # --- Mejoras visuales del código de barras (estilo lujoso en B/W) ---
-        # Creamos el barcode con barras un poco más anchas para presencia
+        # Código de barras: restaurado al estilo funcional original
         barcode = code128.Code128(
             self.barcode_value,
             barHeight=bar_height,
-            barWidth=0.45 * mm,
+            barWidth=0.35 * mm,
             humanReadable=False
         )
 
@@ -202,35 +201,18 @@ class Etiqueta:
         # Escala horizontal para encajar en target_w
         scale_x = min(1.0, target_w / barcode.width)
 
-        # Calcular posición y dimensiones reales del barcode escalado
-        real_bar_w = barcode.width * scale_x
-        frame_padding = 0.08 * cm
-        frame_w = real_bar_w + 2 * frame_padding
-        frame_h = bar_height + 2 * frame_padding
-
-        # Centro horizontal
-        frame_x = (self.width - frame_w) / 2.0
-        frame_y = barcode_y - frame_padding
-
-        # (Se omiten los marcos alrededor del código de barras por solicitud)
-        inner_margin = 0.9 * mm
-
-        # SKU label removed: do not display the SKU above the barcode per user request
-
-        # Dibujar el barcode escalado dentro del marco
+        # Centrado horizontal y dibujo del barcode escalado
         c.saveState()
-        barcode_x = frame_x + frame_padding
-        # Centramos dentro del frame horizontalmente
-        barcode_x = frame_x + (frame_w - real_bar_w) / 2.0
+        barcode_x = (self.width - barcode.width * scale_x) / 2.0
         c.translate(barcode_x, barcode_y)
         c.scale(scale_x, 1.0)
         barcode.drawOn(c, 0, 0)
         c.restoreState()
 
-        # Número del código de barras debajo del código (estética serif pequeña)
-        c.setFont("Times-Roman", 6.5)
+        # Número del código de barras debajo del código (legible)
+        c.setFont("Helvetica", 6.5)
         c.setFillColor(dark)
-        c.drawCentredString(self.width / 2, frame_y - (0.12 * cm), self.barcode_value)
+        c.drawCentredString(self.width / 2, barcode_y - 0.2 * cm, self.barcode_value)
 
         # Restaurar el estado del canvas
         c.restoreState()
